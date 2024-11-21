@@ -1,0 +1,14 @@
+{
+    "Correspondence": true,
+    "Intranet": true,
+    "PQRS": true,
+    "DocumentaryClassification": true,
+    "HelpTable": true,
+    "Workhistories": true,
+    "Configuracion": true,
+    "DocumentosElectronicos": true,
+    "NotificacionesIntraweb": true,
+    "ExpedientesElectronicos": true,
+    "ListadoCorreosCheckeados": true,
+    "Visit": true
+}

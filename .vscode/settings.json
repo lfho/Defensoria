@@ -1,0 +1,10 @@
+{
+    "tslint.typeCheck": true,
+    "intelephense.diagnostics.enable": false,
+    "cloudcode.duetAI.languages": [
+        "css",
+        "html",
+        "php",
+        "javascript"
+    ]
+}
