@@ -71,7 +71,17 @@
             <!-- end #accordion search -->
             <div class="panel-body">
                 <!-- begin buttons action table -->
-                
+                <div class="float-xl-right m-b-15">
+                    <!--Solo al que tiene el rol de secretaaria de salud puede exportar la tabla -->
+                    <!-- Acciones para exportar datos de tabla-->
+                    <div class="btn-group">
+                        <a href="javascript:;" data-toggle="dropdown" class="btn btn-primary"><i class="fa fa-download mr-2"></i> @lang('export_data_table')</a>
+                        <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
+                        <div class="dropdown-menu dropdown-menu-right bg-blue">
+                            <a href="javascript:;" @click="exportDataTableAvanzado('xlsx')" class="dropdown-item text-white no-hover"><i class="fa fa-file-excel mr-2"></i> EXCEL</a>
+                        </div>
+                    </div>
+                </div>
                 <!-- end buttons action table -->
                 @include('visit::citizens.table')
             </div>

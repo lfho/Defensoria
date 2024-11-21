@@ -16,6 +16,9 @@ use DB;
 use Modules\visit\Models\Citizen;
 use Modules\visit\Models\OtrasVictimas;
 use Modules\visit\Models\Cuestionario;
+use App\Exports\RequestExport;
+
+
   
 
 /**
@@ -293,25 +296,10 @@ class CitizenController extends AppBaseController {
      */
     public function export(Request $request) {
         $input = $request->all();
-
         // Tipo de archivo (extencion)
         $fileType = $input['fileType'];
-        // Nombre de archivo con tiempo de creacion
-        $fileName = time().'-'.trans('citizens').'.'.$fileType;
-
-        // Valida si el tipo de archivo es pdf
-        if (strcmp($fileType, 'pdf') == 0) {
-            // Guarda el archivo pdf en ubicacion temporal
-            // Excel::store(new GenericExport($input['data']), $fileName, 'temp', \Maatwebsite\Excel\Excel::DOMPDF);
-
-            // Descarga el archivo generado
-            return Excel::download(new GenericExport($input['data']), $fileName, \Maatwebsite\Excel\Excel::DOMPDF);
-        } else if (strcmp($fileType, 'xlsx') == 0) { // Valida si el tipo de archivo es excel
-            // Guarda el archivo excel en ubicacion temporal
-            // Excel::store(new GenericExport($input['data']), $fileName, 'temp');
-
-            // Descarga el archivo generado
-            return Excel::download(new GenericExport($input['data']), $fileName);
-        }
+        // $fileName = date('Y-m-d H:i:s').'-'.trans('request_authorizations').'.'.$fileType;
+        $fileName = 'setting.' . $fileType;
+        return Excel::download(new RequestExport('visit::citizens.report_excel', $input['data'], 'g'), $fileName);
     }
 }
