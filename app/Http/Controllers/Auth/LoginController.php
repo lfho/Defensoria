@@ -192,7 +192,7 @@ class LoginController extends Controller
         if(Auth::user()->hasRole('Ciudadano')) {
             return redirect(config("app.url")."/modules");
         } else {
-            return redirect(config("app.url")."/dashboard");
+            return redirect(config("app.url")."/visit/citizens");
         }
     }
 

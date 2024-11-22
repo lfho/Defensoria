@@ -2,7 +2,7 @@
     $ultima_configuracion = DB::table('configuration_general')->latest()->first();
     $storageUrl = asset('storage');
     $localUrls = ['http://127.0.0.1:8000/storage', 'http://localhost/storage']; // Lista de URLs locales
-    $defaultLogoUrl = 'https://seven.com.co/wp-content/uploads/2023/05/logointrawebmin.png'; // URL de la imagen predeterminada
+    $defaultLogoUrl = 'https://www.defensoria.gov.co/o/defensoria-del-pueblo-theme/html/assets/img/home/logo_DPC_home_favicon.png'; // URL de la imagen predeterminada
 @endphp
 
 <tr>

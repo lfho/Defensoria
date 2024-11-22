@@ -79,32 +79,11 @@
 									<i class="fa fa-sign-in-alt mr-2"></i>@lang('Login')
 								</button>
 							</div>
-							<div class="col-6 pl-1">
-								<a href="{{ url('/register') }}" class="btn btn-link btn-lg w-100">
-									<i class="fa fa-user fa-lg mr-2"></i>Registrarme
-								</a>
-							</div>
+							
 						</div>
 						
-						<div class="m-t-20 m-b-20 text-inverse">
-                            Si no recuerda su contraseña haga click <a href="{{ url('/password/reset') }}">Aquí</a><br>
-						</div>
+						
 
-						<div class="list-group w-100">
-							<div class="list-group-item list-group-item-action disabled">
-								<b>Acciones de PQRS</b> <br>
-								<small>Haga clic en la opción que desea realizar.</small>
-							</div>
-							<a href="{{ url('/correspondence/search-pqrs-ciudadano') }}" class="list-group-item list-group-item-action btn">
-								<i class="fa fa-search fa-lg mr-2"></i> Consultar PQRS de correspondencias recibidas.
-							</a>
-							<a href="{{ url('/register') }}" class="list-group-item list-group-item-action btn">
-								<i class="fa fa-user fa-lg mr-2"></i> Regístrese como ciudadano para crear y hacer seguimiento de sus PQRS.
-							</a>
-							<a href="{{ url('/pqrs/p-q-r-s-ciudadano-anonimo') }}" class="list-group-item list-group-item-action btn">
-								<i class="fa fa-user-secret fa-lg mr-2"></i> Si es un ciudadano anónimo, ingrese aquí para crear y consultar PQRS.
-							</a>
-						</div>
 						
 
 						<hr />

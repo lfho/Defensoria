@@ -13,7 +13,7 @@
 <crud
     name="citizens"
     :resource="{default: 'citizens', get: 'get-citizens'}"
-    :init-values="{otras_victimas_list:[] }"
+    :init-values="{otras_victimas_list:[] , email : '{{ $email }}' }"
     inline-template>
     <div>
         <!-- begin breadcrumb -->
@@ -31,6 +31,11 @@
         <div class="m-t-20">
             <button @click="add()" type="button" class="btn btn-primary m-b-10" data-backdrop="static" data-target="#modal-form-citizens" data-toggle="modal">
                 <i class="fa fa-plus mr-2"></i>Crear formulario
+            </button>
+
+            <button  type="button" class="btn btn-primary m-b-10" 
+                data-target="#configurate_mail"  data-toggle="modal">
+                <i class="fas fa-cogs"></i>  Configurar correo del defensor
             </button>
         </div>
         <!-- end main buttons -->
@@ -155,6 +160,36 @@
             </div>
         </div>
         <!-- end #modal-form-citizens -->
+
+        <!-- begin  #modal-form-report dimamyc-modal -->
+        <dynamic-modal-form modal-id="configurate_mail" size-modal="lg"
+        confirmation-message-saved="Confirmar correo"
+        title="Configuración de correo defensor" :data-form.sync="dataForm" endpoint="get-configurate-email"
+        {{-- :is-update="false" --}}
+        >
+
+            <template #fields="scope">
+                <div class="panel" data-sortable-id="ui-general-1">
+                    <!-- begin panel-body -->
+                    <div class="panel-body ">
+
+                        <!-- Status Event Field -->
+                        <div class="form-group row m-b-15">
+                            {!! Form::label('email','Correo electrónico del defensor encargado:', ['class' => 'col-form-label col-md-3 required']) !!}
+                            <div class="col-md-9">
+                            {!! Form::email('email', null, [':class' => "{'form-control':true, 'is-invalid':dataErrors.email }", 'v-model' => 'scope.dataForm.email', 'required' => true]) !!}
+                                
+                                <small>Ingrese el correo del defensor. </small>
+                            <div class="invalid-feedback" v-if="dataErrors.email">
+                            <p class="m-b-0" v-for="error in dataErrors.email">@{{ error }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- end panel-body -->
+                </div>
+            </template>
+        </dynamic-modal-form>
+        <!-- end #modal-form-report dimamyc-modal -->
     </div>
 </crud>
 @endsection

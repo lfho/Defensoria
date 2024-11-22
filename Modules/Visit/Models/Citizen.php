@@ -4,6 +4,8 @@ namespace Modules\visit\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\visit\Models\Cuestionario;
+use Modules\visit\Models\ConfigurationMail;
+
 
 
 class Citizen extends Model
@@ -20,7 +22,8 @@ class Citizen extends Model
         'numero_celular',
         'genero',
         'ciclo_vital',
-        'tipo_victima'
+        'tipo_victima',
+        'otras_victimas'
     ];
 
     protected $casts = [
@@ -51,7 +54,7 @@ class Citizen extends Model
         'deleted_at' => 'nullable'
     ];
 
-    protected $appends = ['tipo_declaracion','hechos','secuelas_generadas','lesiones_psicologicas','lesiones_fisicass','patrimonios_afectados', 'descripcion','tiempo_acto','descripcio_hecho_principal' ];
+    protected $appends = ['tipo_declaracion','hechos','secuelas_generadas','lesiones_psicologicas','lesiones_fisicass','patrimonios_afectados', 'descripcion','tiempo_acto','descripcio_hecho_principal', 'email' ];
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -147,6 +150,14 @@ class Citizen extends Model
             ->first()
             ->descripcio_hecho_principal ?? '';
         return $descripcio_hecho_principal;
+    }
+
+    public function getEmailAttribute()
+    {
+        $mail = ConfigurationMail::select('email')
+            ->first()
+            ->email ?? '';
+        return $mail;
     }
     
 

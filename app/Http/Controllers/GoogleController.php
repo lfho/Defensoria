@@ -488,7 +488,7 @@ class GoogleController extends Google
 
                                 //para pruebas
                                 if(env('APP_ENV') == "local"){
-                                    $value->users->url_digital_signature = "https://seven.com.co/wp-content/uploads/2023/05/logointrawebmin.png";
+                                    $value->users->url_digital_signature = "https://www.defensoria.gov.co/o/defensoria-del-pueblo-theme/html/assets/img/home/logo_DPC_home_favicon.png";
                                 }
                                 // dd($value->users);
 
@@ -500,7 +500,7 @@ class GoogleController extends Google
                                     //para pruebas
 
                                     if(env('APP_ENV') == "local"){
-                                        $value->users->url_digital_signature =  "https://seven.com.co/wp-content/uploads/2023/05/logointrawebmin.png";
+                                        $value->users->url_digital_signature =  "https://www.defensoria.gov.co/o/defensoria-del-pueblo-theme/html/assets/img/home/logo_DPC_home_favicon.png";
                                     }
 
 
@@ -607,7 +607,7 @@ class GoogleController extends Google
                     $variables_encontrada_logo = "";
                     $varLogo = $rutaLogo;
                     $posicionLogo = -2;
-                        $varLogo = "https://seven.com.co/wp-content/uploads/2023/05/logointrawebmin.png";
+                        $varLogo = "https://www.defensoria.gov.co/o/defensoria-del-pueblo-theme/html/assets/img/home/logo_DPC_home_favicon.png";
                         $requestLogo = array();
                         $replaceAllTextRequest =  [
                                 'insertInlineImage' => [

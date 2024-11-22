@@ -22,6 +22,8 @@ Route::resource('citizens', 'CitizenController', ['only' => [
 Route::get('get-citizens', 'CitizenController@all')->name('all');
 // Ruta para exportar los datos de citizens
 Route::post('export-citizens', 'CitizenController@export')->name('export');
+// Ruta para exportar los datos de citizens
+Route::post('get-configurate-email', 'CitizenController@getConfigurateEmail')->name('getConfigurateEmail');
 });
 
 

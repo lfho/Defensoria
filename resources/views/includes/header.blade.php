@@ -52,11 +52,6 @@ $ultima_configuracion = DB::table('configuration_general')->latest()->first();
             @endif
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                {{-- Si es un ciudadano, no se le muestra el item de editar perfil --}}
-                @if(Auth::check() && !Auth::user()->hasRole('Ciudadano') && !Auth::user()->hasRole('Proveedor TIC'))
-                    <a href="{{ url('/profile') }}" class="dropdown-item">@lang('edit_profle')</a>
-                    <div class="dropdown-divider"></div>
-                @endif
                 {{-- Valida si tiene sesión el usuario para habilitar la acción de cerrar sesión --}}
                 @if(Auth::check())
                     <a href="{{ url('/logout') }}" class="dropdown-item"

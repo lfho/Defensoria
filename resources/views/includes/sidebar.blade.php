@@ -24,7 +24,7 @@
 
 					<div class="image" style="margin: auto; display:block">
 
-						<img src="https://seven.com.co/wp-content/uploads/2023/05/logointrawebmin.png" alt="" />
+						<img src="https://www.defensoria.gov.co/o/defensoria-del-pueblo-theme/html/assets/img/home/logo_DPC_home_favicon.png" alt="" />
 						<p style="color: gray; font-size: 12px; text-align:center">Versión: {{$ultima_version->numero_version}}</p>
 					</div>
 

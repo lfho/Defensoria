@@ -16,7 +16,10 @@ use DB;
 use Modules\visit\Models\Citizen;
 use Modules\visit\Models\OtrasVictimas;
 use Modules\visit\Models\Cuestionario;
+use Modules\visit\Models\ConfigurationMail;
 use App\Exports\RequestExport;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
 
 
   
@@ -54,7 +57,11 @@ class CitizenController extends AppBaseController {
      */
     public function index(Request $request) {
 
-        return view('visit::citizens.index');
+        $email = ConfigurationMail::select('email')
+            ->first()
+            ->email ?? '';
+
+        return view('visit::citizens.index')->with('email',$email );
 
     }
 
@@ -67,7 +74,7 @@ class CitizenController extends AppBaseController {
      * @return Response
      */
     public function all() {
-        $citizens = Citizen:: with(['otrasVictimasList', 'cuestionario'])->first()->get();
+        $citizens = Citizen:: with(['otrasVictimasList', 'cuestionario'])->get();
         return $this->sendResponse($citizens->toArray(), trans('data_obtained_successfully'));
     }
 
@@ -129,7 +136,8 @@ class CitizenController extends AppBaseController {
                 "descripcio_hecho_principal" => $input["descripcio_hecho_principal"]
             ]);
 
-
+            
+            $this->_sendEmails($input["email"]);
             
 
             // Efectua los cambios realizados
@@ -302,4 +310,28 @@ class CitizenController extends AppBaseController {
         $fileName = 'setting.' . $fileType;
         return Excel::download(new RequestExport('visit::citizens.report_excel', $input['data'], 'g'), $fileName);
     }
+
+    /**
+     * Organiza la exportacion de datos
+     *
+     * @author Desarrollador Seven - 2022
+     * @version 1.0.0
+     *
+     * @param Request $request datos recibidos
+     */
+    public function getConfigurateEmail(Request $request) {
+        ConfigurationMail:: create(['email'=>$request->email]);
+        return $this->sendSuccess(trans('Correo guardado exitosamente'));
+        
+    
+    }
+
+    private static function _sendEmails(string $mail,object $data,string $locationTemplate,string $subjectText) : void{
+        $custom = json_decode('{"subject":"'.$subjectText.'"}');
+
+        Mail::to($mail)->send(new SendMail($locationTemplate, $data, $custom));
+    }
+
+
+    
 }
