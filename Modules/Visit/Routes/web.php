@@ -24,6 +24,11 @@ Route::get('get-citizens', 'CitizenController@all')->name('all');
 Route::post('export-citizens', 'CitizenController@export')->name('export');
 // Ruta para exportar los datos de citizens
 Route::post('get-configurate-email', 'CitizenController@getConfigurateEmail')->name('getConfigurateEmail');
+
+Route::post('export-indicators-citizens', 'CitizenController@exportIndicators')->name('exportIndicators');
+// Obtiene todos los datos de una constante dependiendo de nombre
+Route::get('get-constants/{nameConstant}', 'UtilController@getConstants');
+
 });
 
 

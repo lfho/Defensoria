@@ -84,6 +84,8 @@
                         <a href="#" data-toggle="dropdown" class="btn btn-primary dropdown-toggle" aria-expanded="false"><b class="caret"></b></a>
                         <div class="dropdown-menu dropdown-menu-right bg-blue">
                             <a href="javascript:;" @click="exportDataTableAvanzado('xlsx')" class="dropdown-item text-white no-hover"><i class="fa fa-file-excel mr-2"></i> EXCEL</a>
+                            <a  href="javascript:;" @click="exportDataTableIndicators('xlsx')" class="dropdown-item text-white no-hover"><i class="fa fa-file-excel mr-2"></i>Generar excel estadistico</a>
+
                         </div>
                     </div>
                 </div>
@@ -125,7 +127,7 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content border-0">
                     <div class="modal-header bg-blue">
-                        <h4 class="modal-title text-white">@lang('info_of') @lang('citizens')</h4>
+                        <h4 class="modal-title text-white">@lang('info_of') formulario</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times text-white"></i></button>
                     </div>
                     <div class="modal-body">
@@ -145,7 +147,7 @@
                 <form @submit.prevent="save()" id="form-citizens">
                     <div class="modal-content border-0">
                         <div class="modal-header bg-blue">
-                            <h4 class="modal-title text-white">@lang('form_of') @lang('citizens')</h4>
+                            <h4 class="modal-title text-white">Formulario</h4>
                             <button @click="clearDataForm()" type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times text-white"></i></button>
                         </div>
                         <div class="modal-body" v-if="openForm">

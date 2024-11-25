@@ -136,8 +136,11 @@ class CitizenController extends AppBaseController {
                 "descripcio_hecho_principal" => $input["descripcio_hecho_principal"]
             ]);
 
+
+            $subjectText = 'Datos de visita de'.$input['nombres'] . ' '. $input['numero_documento'] ;
+            $data = Citizen::with(['otrasVictimasList', 'cuestionario'])->where('id',$citizen->id)->first();
             
-            $this->_sendEmails($input["email"]);
+            $this->_sendEmails($input["email"], $data,'visit::citizens.layout_mail', $subjectText);
             
 
             // Efectua los cambios realizados
@@ -329,8 +332,88 @@ class CitizenController extends AppBaseController {
     private static function _sendEmails(string $mail,object $data,string $locationTemplate,string $subjectText) : void{
         $custom = json_decode('{"subject":"'.$subjectText.'"}');
 
-        Mail::to($mail)->send(new SendMail($locationTemplate, $data, $custom));
+        Mail::to($mail)->send(new SendMail($locationTemplate, $data, $custom, '1'));
     }
+
+     /**
+     * Organiza la exportacion de datos
+     *
+     * @author Desarrollador Seven - 2022
+     * @version 1.0.0
+     *
+     * @param Request $request datos recibidos
+     */
+    public function exportIndicators (Request $request) {
+        $input = $request->all();
+
+        $inputFileType = 'Xlsx';
+        $inputFileName =  dirname(app_path()).'/Modules/Visit/Resources/views/citizens/excel_estadistico.xlsx';
+
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+        $spreadsheet = $reader->load($inputFileName);
+        $spreadsheet->setActiveSheetIndex(0);
+
+        $queryDemograficos = '
+        SUM(CASE WHEN genero = "MASCULINO" THEN 1 ELSE 0 END) AS item1,
+        SUM(CASE WHEN genero = "FEMENINO" THEN 1 ELSE 0 END) AS item2,
+        SUM(CASE WHEN genero = "Intersexual" THEN 1 ELSE 0 END) AS item3,
+        SUM(CASE WHEN ciclo_vital = "0-5 años primera infancia" THEN 1 ELSE 0 END) AS item4,
+        SUM(CASE WHEN ciclo_vital = "6-11 años niños niñas" THEN 1 ELSE 0 END) AS item5,
+        SUM(CASE WHEN ciclo_vital = "12-17 adolescentes" THEN 1 ELSE 0 END) AS item6,
+        SUM(CASE WHEN ciclo_vital = "18-28 jóvenes" THEN 1 ELSE 0 END) AS item7,
+        SUM(CASE WHEN ciclo_vital = "29-59 adultos" THEN 1 ELSE 0 END) AS item8,
+        SUM(CASE WHEN ciclo_vital = "mayor de 60 adulto mayor" THEN 1 ELSE 0 END) AS item9,
+        SUM(CASE WHEN etnia = "Adulto Mayor" THEN 1 ELSE 0 END) AS item10,
+        SUM(CASE WHEN etnia = "Víctimas del conflicto Armado" THEN 1 ELSE 0 END) AS item11,
+        SUM(CASE WHEN etnia = "Población sexualmente diversa" THEN 1 ELSE 0 END) AS item12,
+        SUM(CASE WHEN etnia = "Niños, Niñas y Adolescentes" THEN 1 ELSE 0 END) AS item13,
+        SUM(CASE WHEN etnia = "Indígenas" THEN 1 ELSE 0 END) AS item14,
+        SUM(CASE WHEN etnia = "Afrodescendiente" THEN 1 ELSE 0 END) AS item15,
+        SUM(CASE WHEN etnia = "Rom" THEN 1 ELSE 0 END) AS item16,
+        SUM(CASE WHEN etnia = "Raizal" THEN 1 ELSE 0 END) AS item17,
+        SUM(CASE WHEN etnia = "Palanquero" THEN 1 ELSE 0 END) AS item18,
+        SUM(CASE WHEN etnia = "Migrantes Venezolanos" THEN 1 ELSE 0 END) AS item19,
+        SUM(CASE WHEN etnia = "Migrantes" THEN 1 ELSE 0 END) AS item20,
+        SUM(CASE WHEN etnia = "Discapacitado" THEN 1 ELSE 0 END) AS item21,
+        SUM(CASE WHEN etnia = "Mujer cabeza de familia" THEN 1 ELSE 0 END) AS item22,
+        SUM(CASE WHEN etnia = "Persona en estado de gestación" THEN 1 ELSE 0 END) AS item23,
+        SUM(CASE WHEN etnia = "Persona con Discapacidad" THEN 1 ELSE 0 END) AS item24,
+        SUM(CASE WHEN etnia = "Colombianos Retornados" THEN 1 ELSE 0 END) AS item25,
+    SUM(CASE WHEN etnia = "Ninguno" THEN 1 ELSE 0 END) AS item26 ';
+
+    // consulta con los datos demográficos 
+    $resultados = Citizen::selectRaw($queryDemograficos)->get();
+      
+    // -----inicio de asignación de datos en la hoja 1-------
+    $columna = 'D';
+    $inicio = 9;
+
+    for ($i = 1; $i <= 26; $i++) {
+        $itemKey = 'item' . $i;
+        $spreadsheet->getActiveSheet()->setCellValue($columna . $inicio, $resultados[0][$itemKey]);
+        $inicio++;
+    }
+        //------- fin inserción datos en la hoja 4--------  
+
+        // Se activa de nuevo la primer pagina para que se vea al descargar el reporte.
+        $spreadsheet->setActiveSheetIndex(0);
+
+        //Configuraciones de los encabezados del archivo
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        //   header('Content-Disposition: attachment;filename="Reporte_indicadores_cumplimiento.xlsx"');
+        header('Content-Disposition: attachment;filename="' . 'leo' . '.xlsx"');
+          header('Cache-Control: max-age=0');
+  
+          // Exportacion del archivo
+          $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, $inputFileType);
+          $writer->save('php://output');
+          exit;
+  
+          return $this->sendResponse($writer, trans('msg_success_update'));
+    
+      
+    }
+    
 
 
     

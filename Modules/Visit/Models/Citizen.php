@@ -23,7 +23,8 @@ class Citizen extends Model
         'genero',
         'ciclo_vital',
         'tipo_victima',
-        'otras_victimas'
+        'otras_victimas',
+        'etnia'
     ];
 
     protected $casts = [

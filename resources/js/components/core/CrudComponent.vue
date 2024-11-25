@@ -388,6 +388,29 @@
             return [];
         }
 
+
+        public exportDataTableIndicators(fileType: string): void {
+
+            this.showLoadingGif(this.lang.get('trans.download_report'));
+
+            let dataJWT = sign({data: this.getMakeDataToExport()}, window["env"].JWT_SECRET_KEY);
+            // Envia peticion para exportar datos de la tabla
+            axios.post(`export-indicators-${this.name}`, {
+                fileType,
+                filtros: this.advancedSearchFilterActualizado()
+            }, {responseType: 'blob'})
+            .then((res) => {
+
+                // Cierra el swal
+                (this.$swal as any).close();
+                // Descagar el archivo generado
+                this.downloadFile(res.data, 'Reporte de indicadores', fileType);
+            })
+            .catch((err) => {
+                this._pushNotification(this.lang.get('trans.Data export failed'), false, 'Error');
+            });
+            }
+
         /**
          * Paginacion con busqueda avanzada
          *

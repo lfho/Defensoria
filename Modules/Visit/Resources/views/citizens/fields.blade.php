@@ -51,7 +51,7 @@
             <div class="form-group row m-b-15 col-sm-6">
                 {!! Form::label('numero_documento', 'Número de documento:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::text('numero_documento', null, ['class' => 'form-control required', 'maxlength' => 30, "onkeypress"=>"return event.charCode >= 48 && event.charCode <= 57", 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.numero_documento',]) !!}
+                    {!! Form::text('numero_documento', null, ['class' => 'form-control required', 'maxlength' => 30, "onkeypress"=>"return event.charCode >= 48 && event.charCode <= 57", 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.numero_documento', 'required' => true]) !!}
                     <small>@lang('Enter the') @{{ `@lang('Numero Documento')` | lowercase }}</small>
                     <div class="invalid-feedback" v-if="dataErrors.numero_documento">
                         <p class="m-b-0" v-for="error in dataErrors.numero_documento">@{{ error }}</p>
@@ -119,7 +119,7 @@
             <div class="form-group row m-b-15 col-sm-6">
                 {!! Form::label('numero_celular', 'Número celular:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::text('numero_celular', null, ['class' => 'form-control required', 'v-model' => 'dataForm.numero_celular',"onkeypress"=>"return event.charCode >= 48 && event.charCode <= 57" ,'maxlength' => 12, 'maxlength' => 12]) !!}
+                    {!! Form::text('numero_celular', null, ['class' => 'form-control required', 'v-model' => 'dataForm.numero_celular',"onkeypress"=>"return event.charCode >= 48 && event.charCode <= 57" ,'maxlength' => 12, 'maxlength' => 12, 'required' => true ]) !!}
                     <small>@lang('Enter the') @{{ `@lang('Numero Celular')` | lowercase }}</small>
                     <div class="invalid-feedback" v-if="dataErrors.numero_celular">
                         <p class="m-b-0" v-for="error in dataErrors.numero_celular">@{{ error }}</p>
@@ -131,6 +131,28 @@
         </div>
 
         <div class="row">
+
+           <!-- Etnia Field -->
+    <div class="form-group row m-b-15 col-md-6">
+        {!! Form::label('etnia', trans('Etnia').':', ['class' => 'col-form-label col-md-3 required']) !!}
+        <div class="col-md-9">
+            <select-check
+                css-class="form-control"
+                name-field="etnia"
+                reduce-label="name"
+                reduce-key="id"
+                name-resource="get-constants/grupo_poblacional"
+                :value="dataForm"
+                :key="dataForm.states_id"
+                :is-required="false"
+                :enable-search="true">
+            </select-check>
+            <small>@lang('Enter the') @{{ `@lang('Etnia')` | lowercase }}</small>
+            <div class="invalid-feedback" v-if="dataErrors.etnia">
+                <p class="m-b-0" v-for="error in dataErrors.etnia">@{{ error }}</p>
+            </div>
+        </div>
+    </div>
             
 
             <!-- Tipo Victima Field -->
@@ -214,7 +236,7 @@
                 <div class="form-group row m-b-15 col-sm-6">
                     {!! Form::label('numero_documento', 'Número de documento:', ['class' => 'col-form-label col-md-3 required']) !!}
                     <div class="col-md-9">
-                        {!! Form::text('numero_documento', null, ['class' => 'form-control required', 'maxlength' => 30, "onkeypress"=>"return event.charCode >= 48 && event.charCode <= 57", 'title' => 'Solo se permiten números', 'v-model' => 'scope.dataForm.numero_documento',]) !!}
+                        {!! Form::text('numero_documento', null, ['class' => 'form-control required', 'maxlength' => 30, "onkeypress"=>"return event.charCode >= 48 && event.charCode <= 57", 'title' => 'Solo se permiten números', 'v-model' => 'scope.dataForm.numero_documento', 'required' => true]) !!}
                         <small>@lang('Enter the') @{{ `@lang('Numero Documento')` | lowercase }}</small>
                         <div class="invalid-feedback" v-if="dataErrors.numero_documento">
                             <p class="m-b-0" v-for="error in dataErrors.numero_documento">@{{ error }}</p>
@@ -227,7 +249,7 @@
                 <div class="form-group row m-b-15 col-sm-6">
                     {!! Form::label('parentezco', 'Parentezco:', ['class' => 'col-form-label col-md-3 required']) !!}
                     <div class="col-md-9">
-                        {!! Form::text('parentezco', null, ['class' => 'form-control required',  'title' => 'Solo se permiten números', 'v-model' => 'scope.dataForm.parentezco',]) !!}
+                        {!! Form::text('parentezco', null, ['class' => 'form-control required',  'title' => 'Solo se permiten números', 'v-model' => 'scope.dataForm.parentezco', 'required' => true]) !!}
                         <small>@lang('Enter the') @{{ `@lang('parentezco')` | lowercase }}</small>
                         <div class="invalid-feedback" v-if="dataErrors.parentezco">
                             <p class="m-b-0" v-for="error in dataErrors.parentezco">@{{ error }}</p>
@@ -289,7 +311,7 @@
             <div class="form-group row m-b-15 col-sm-12">
                 {!! Form::label('hechos', 'Hechos:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::textarea('hechos', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.hechos',]) !!}
+                    {!! Form::textarea('hechos', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.hechos', 'required' => true]) !!}
                     <small>Ingrese la descripción de los hechos</small>
                     <div class="invalid-feedback" v-if="dataErrors.hechos">
                         <p class="m-b-0" v-for="error in dataErrors.hechos">@{{ error }}</p>
@@ -308,7 +330,7 @@
             <div class="form-group row m-b-15 col-sm-12">
                 {!! Form::label('secuelas_generadas', 'Impactos y/o secuelas generadas por los hechos:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::textarea('secuelas_generadas', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.secuelas_generadas',]) !!}
+                    {!! Form::textarea('secuelas_generadas', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.secuelas_generadas', 'required' => true]) !!}
                     <small>Ingrese la descripción de los impactos y/o secuelas generadas por los hechoss</small>
                     <div class="invalid-feedback" v-if="dataErrors.secuelas_generadas">
                         <p class="m-b-0" v-for="error in dataErrors.secuelas_generadas">@{{ error }}</p>
@@ -321,7 +343,7 @@
             <div class="form-group row m-b-15 col-sm-12">
             {!! Form::label('patrimonios_afectados', 'Patrimonios que se vieron afectados:', ['class' => 'col-form-label col-md-3 required']) !!}
             <div class="col-md-9">
-                {!! Form::textarea('patrimonios_afectados', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.patrimonios_afectados',]) !!}
+                {!! Form::textarea('patrimonios_afectados', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.patrimonios_afectados', 'required' => true]) !!}
                 <small>Ingrese la descripción de los patrimonios_afectados</small>
                 <div class="invalid-feedback" v-if="dataErrors.patrimonios_afectados">
                     <p class="m-b-0" v-for="error in dataErrors.patrimonios_afectados">@{{ error }}</p>
@@ -335,7 +357,7 @@
             <div class="form-group row m-b-15 col-sm-6">
                 {!! Form::label('lesiones_fisicass', 'Lesiones fisicas:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::text('lesiones_fisicass', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.lesiones_fisicass',]) !!}
+                    {!! Form::text('lesiones_fisicass', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.lesiones_fisicass', 'required' => true ]) !!}
                     <small>Ingrese la descripción de las lesiones ficicas</small>
                     <div class="invalid-feedback" v-if="dataErrors.lesiones_fisicass">
                         <p class="m-b-0" v-for="error in dataErrors.lesiones_fisicass">@{{ error }}</p>
@@ -348,7 +370,7 @@
             <div class="form-group row m-b-15 col-sm-6">
                 {!! Form::label('lesiones_psicologicas', 'Lesiones psicologicas:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::text('lesiones_psicologicas', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.lesiones_psicologicas',]) !!}
+                    {!! Form::text('lesiones_psicologicas', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.lesiones_psicologicas', 'required' => true ]) !!}
                     <small>Ingrese la descripción de los lesiones psicologicas</small>
                     <div class="invalid-feedback" v-if="dataErrors.lesiones_psicologicas">
                         <p class="m-b-0" v-for="error in dataErrors.lesiones_psicologicas">@{{ error }}</p>
@@ -363,7 +385,7 @@
             <div class="form-group row m-b-15 col-sm-12">
                 {!! Form::label('descripcion', 'Descripción:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::textarea('descripcion', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.descripcion',]) !!}
+                    {!! Form::textarea('descripcion', null, ['class' => 'form-control required', 'title' => 'Solo se permiten números', 'v-model' => 'dataForm.descripcion', 'required' => true ]) !!}
                     <small>Ingrese la descripción de las lesiones ficicas</small>
                     <div class="invalid-feedback" v-if="dataErrors.descripcion">
                         <p class="m-b-0" v-for="error in dataErrors.descripcion">@{{ error }}</p>
@@ -385,7 +407,7 @@
             <div class="form-group row m-b-15 col-sm-12">
                 {!! Form::label('tiempo_acto', 'Tiempo en el que actuo:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::textarea('tiempo_acto', null, ['class' => 'form-control required',  'v-model' => 'dataForm.tiempo_acto',]) !!}
+                    {!! Form::textarea('tiempo_acto', null, ['class' => 'form-control required',  'v-model' => 'dataForm.tiempo_acto', 'required' => true ]) !!}
                     <small>Ingrese el tiempo en el que actuo</small>
                     <div class="invalid-feedback" v-if="dataErrors.tiempo_acto">
                         <p class="m-b-0" v-for="error in dataErrors.tiempo_acto">@{{ error }}</p>
@@ -397,7 +419,7 @@
             <div class="form-group row m-b-15 col-sm-12">
                 {!! Form::label('descripcio_hecho_principal', 'Descripción de los hechos principales:', ['class' => 'col-form-label col-md-3 required']) !!}
                 <div class="col-md-9">
-                    {!! Form::textarea('descripcio_hecho_principal', null, ['class' => 'form-control required',  'v-model' => 'dataForm.descripcio_hecho_principal',]) !!}
+                    {!! Form::textarea('descripcio_hecho_principal', null, ['class' => 'form-control required',  'v-model' => 'dataForm.descripcio_hecho_principal', 'required' => true ]) !!}
                     <small>Ingrese el tiempo en el que actuo</small>
                     <div class="invalid-feedback" v-if="dataErrors.descripcio_hecho_principal">
                         <p class="m-b-0" v-for="error in dataErrors.descripcio_hecho_principal">@{{ error }}</p>
