@@ -63,12 +63,51 @@
                         <!-- Campos de busqueda -->
                         <div class="row form-group">
                             <div class="col-md-4">
-                                <input v-model="searchFields.name" class="form-control" placeholder="Filtrar por ejemplo" name="name" type="text">
+                                <date-picker
+                                    :value="searchFields"
+                                    name-field="created_at"
+                                    mode="range">
+                                </date-picker>
+                                <small>Filtrar por la fecha de visita en un rango de fechas</small>
                             </div>
+
+                            <div class="col-md-4">
+                                <select class="form-control" name="	Rango edad" v-model="searchFields.ciclo_vital">
+                                    <option value="" disabled selected>Seleccione un ciclo vital</option>
+                                    <option value="0-5 años primera infancia">0-5 años primera infancia</option>
+                                    <option value="6-11 años niños niñas">6-11 años niños niñas</option>
+                                    <option value="12-17 adolescentes">12-17 adolescentes</option>
+                                    <option value="18-28 jóvenes">18-28 jóvenes</option>
+                                    <option value="29-59 adultos">29-59 adultos</option>
+                                    <option value="mayor de 60 adulto mayor">mayor de 60 adulto mayor</option>
+                                </select>
+                                <small>Filtrar por ciclo vital</small> 
+                            </div> 
+
+                            <div class="col-md-4">
+                                {!! Form::text('nombre_ciudadano', null, [
+                                    'v-model' => 'searchFields.citizen_name',
+                                    'class' => 'form-control',
+                                    'placeholder' => trans('crud.filter_by', ['name' => 'Nombre ciudadano']),
+                                ]) !!}
+                            </div> 
+                         
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-4">
+                                {!! Form::text('numero_documento', null, [
+                                    'v-model' => 'searchFields.numero_documento',
+                                    'class' => 'form-control',
+                                    'placeholder' => trans('crud.filter_by', ['name' => 'numero documento']),
+                                ]) !!}
+                            </div> 
+
                             <div class="col-md-4">
                                 <button @click="clearDataSearch()" class="btn btn-md btn-primary">@lang('clear_search_fields')</button>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <!-- end card search -->

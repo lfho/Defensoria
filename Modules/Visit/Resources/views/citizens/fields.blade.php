@@ -272,6 +272,27 @@
                         </div>
                     </div>
                 </div>
+
+                 <!-- Ciclo Vital Field -->
+                <div class="form-group row m-b-15 col-sm-6">
+                    {!! Form::label('ciclo_vital_otra_victima', 'Ciclo Vital:', ['class' => 'col-form-label col-md-3 required']) !!}
+                    <div class="col-md-9">
+                        <select class="form-control" name="ciclo_vital_otra_victima" v-model="scope.dataForm.ciclo_vital_otra_victima" required>
+                            <option value="" disabled selected>Seleccione un ciclo vital</option>
+                            <option value="0-5 años primera infancia">0-5 años primera infancia</option>
+                            <option value="6-11 años niños niñas">6-11 años niños niñas</option>
+                            <option value="12-17 adolescentes">12-17 adolescentes</option>
+                            <option value="18-28 jóvenes">18-28 jóvenes</option>
+                            <option value="29-59 adultos">29-59 adultos</option>
+                            <option value="mayor de 60 adulto mayor">mayor de 60 adulto mayor</option>
+                        </select>
+                        <small>@lang('Enter the') @{{ `@lang('Ciclo Vital')` | lowercase }}</small>
+                        <div class="invalid-feedback" v-if="dataErrors.ciclo_vital_otra_victima">
+                            <p class="m-b-0" v-for="error in dataErrors.ciclo_vital_otra_victima">@{{ error }}</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
                 
                

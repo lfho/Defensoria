@@ -57,9 +57,8 @@ class CitizenController extends AppBaseController {
      */
     public function index(Request $request) {
 
-        $email = ConfigurationMail::select('email')
-            ->first()
-            ->email ?? '';
+        $email = ConfigurationMail::select('email')->orderBy('created_at', 'desc')
+        ->first()->email ?? '';
 
         return view('visit::citizens.index')->with('email',$email );
 
@@ -110,15 +109,18 @@ class CitizenController extends AppBaseController {
                 foreach ($input['otras_victimas_list'] as $otasVictimas) {
                     $otasVictimas = json_decode($otasVictimas);
         
+                    // dd($otasVictimas);
+
                     OtrasVictimas::create([
                         "nombres" => $otasVictimas->nombres ?? '',
-                        "apellidos" => $citizenotasVictimas->apellidos ?? '',
+                        "apellidos" => $otasVictimas->apellidos ?? '',
                         "tipo_documento" => $otasVictimas->tipo_documento ?? '',
                         "numero_documento" => $otasVictimas->numero_documento ?? '',
                         "parentezco" => $otasVictimas->parentezco ?? '',
-                        "tipo_victima" => $otasVictimas->otasVictimas ?? '',
+                        "tipo_victima" => $otasVictimas->tipo_victima ?? '',
                         "ciudadano_id" => $citizen->id ?? '',
-                        "nombre_referido" => $citizen->nombres
+                        "nombre_referido" => $citizen->nombres,
+                        "ciclo_vital" => $otasVictimas->ciclo_vital_otra_victima
                     ]);
                 }
             }
@@ -137,14 +139,18 @@ class CitizenController extends AppBaseController {
             ]);
 
 
-            $subjectText = 'Datos de visita de'.$input['nombres'] . ' '. $input['numero_documento'] ;
+            $subjectText = 'Datos de visita de '.$input['nombres'] . ' '. $input['numero_documento'] ;
             $data = Citizen::with(['otrasVictimasList', 'cuestionario'])->where('id',$citizen->id)->first();
             
             $this->_sendEmails($input["email"], $data,'visit::citizens.layout_mail', $subjectText);
             
+            $citizen->otrasVictimasList; 
+            $citizen->cuestionario;
 
             // Efectua los cambios realizados
             DB::commit();
+
+
 
             return $this->sendResponse($citizen->toArray(), trans('msg_success_save'));
         } catch (\Illuminate\Database\QueryException $error) {
@@ -201,13 +207,15 @@ class CitizenController extends AppBaseController {
         
                     OtrasVictimas::create([
                         "nombres" => $otasVictimas->nombres ?? '',
-                        "apellidos" => $citizenotasVictimas->apellidos ?? '',
+                        "apellidos" => $otasVictimas->apellidos ?? '',
                         "tipo_documento" => $otasVictimas->tipo_documento ?? '',
                         "numero_documento" => $otasVictimas->numero_documento ?? '',
                         "parentezco" => $otasVictimas->parentezco ?? '',
-                        "tipo_victima" => $otasVictimas->otasVictimas ?? '',
+                        "tipo_victima" => $otasVictimas->tipo_victima ?? '',
                         "ciudadano_id" => $citizen->id ?? '',
-                        "nombre_referido" => $citizen->nombres
+                        "nombre_referido" => $citizen->nombres,
+                        "ciclo_vital" => $otasVictimas->ciclo_vital_otra_victima ?? NULL
+                        
                     ]);
                 }
             }
@@ -228,6 +236,8 @@ class CitizenController extends AppBaseController {
                 ]);
             }
 
+            $citizen->otrasVictimasList; 
+            $citizen->cuestionario;
             // Efectua los cambios realizados
             DB::commit();
         
@@ -354,46 +364,88 @@ class CitizenController extends AppBaseController {
         $spreadsheet->setActiveSheetIndex(0);
 
         $queryDemograficos = '
-        SUM(CASE WHEN genero = "MASCULINO" THEN 1 ELSE 0 END) AS item1,
-        SUM(CASE WHEN genero = "FEMENINO" THEN 1 ELSE 0 END) AS item2,
-        SUM(CASE WHEN genero = "Intersexual" THEN 1 ELSE 0 END) AS item3,
-        SUM(CASE WHEN ciclo_vital = "0-5 años primera infancia" THEN 1 ELSE 0 END) AS item4,
-        SUM(CASE WHEN ciclo_vital = "6-11 años niños niñas" THEN 1 ELSE 0 END) AS item5,
-        SUM(CASE WHEN ciclo_vital = "12-17 adolescentes" THEN 1 ELSE 0 END) AS item6,
-        SUM(CASE WHEN ciclo_vital = "18-28 jóvenes" THEN 1 ELSE 0 END) AS item7,
-        SUM(CASE WHEN ciclo_vital = "29-59 adultos" THEN 1 ELSE 0 END) AS item8,
-        SUM(CASE WHEN ciclo_vital = "mayor de 60 adulto mayor" THEN 1 ELSE 0 END) AS item9,
-        SUM(CASE WHEN etnia = "Adulto Mayor" THEN 1 ELSE 0 END) AS item10,
-        SUM(CASE WHEN etnia = "Víctimas del conflicto Armado" THEN 1 ELSE 0 END) AS item11,
-        SUM(CASE WHEN etnia = "Población sexualmente diversa" THEN 1 ELSE 0 END) AS item12,
-        SUM(CASE WHEN etnia = "Niños, Niñas y Adolescentes" THEN 1 ELSE 0 END) AS item13,
-        SUM(CASE WHEN etnia = "Indígenas" THEN 1 ELSE 0 END) AS item14,
-        SUM(CASE WHEN etnia = "Afrodescendiente" THEN 1 ELSE 0 END) AS item15,
-        SUM(CASE WHEN etnia = "Rom" THEN 1 ELSE 0 END) AS item16,
-        SUM(CASE WHEN etnia = "Raizal" THEN 1 ELSE 0 END) AS item17,
-        SUM(CASE WHEN etnia = "Palanquero" THEN 1 ELSE 0 END) AS item18,
-        SUM(CASE WHEN etnia = "Migrantes Venezolanos" THEN 1 ELSE 0 END) AS item19,
-        SUM(CASE WHEN etnia = "Migrantes" THEN 1 ELSE 0 END) AS item20,
-        SUM(CASE WHEN etnia = "Discapacitado" THEN 1 ELSE 0 END) AS item21,
-        SUM(CASE WHEN etnia = "Mujer cabeza de familia" THEN 1 ELSE 0 END) AS item22,
-        SUM(CASE WHEN etnia = "Persona en estado de gestación" THEN 1 ELSE 0 END) AS item23,
-        SUM(CASE WHEN etnia = "Persona con Discapacidad" THEN 1 ELSE 0 END) AS item24,
-        SUM(CASE WHEN etnia = "Colombianos Retornados" THEN 1 ELSE 0 END) AS item25,
-    SUM(CASE WHEN etnia = "Ninguno" THEN 1 ELSE 0 END) AS item26 ';
+        SUM(CASE WHEN genero = "MASCULINO" THEN 1 ELSE 0 END) AS item0,
+        SUM(CASE WHEN genero = "FEMENINO" THEN 1 ELSE 0 END) AS item1,
+        SUM(CASE WHEN genero = "Intersexual" THEN 1 ELSE 0 END) AS item2,
+        SUM(CASE WHEN ciclo_vital = "0-5 años primera infancia" THEN 1 ELSE 0 END) AS item3,
+        SUM(CASE WHEN ciclo_vital = "6-11 años niños niñas" THEN 1 ELSE 0 END) AS item4,
+        SUM(CASE WHEN ciclo_vital = "12-17 adolescentes" THEN 1 ELSE 0 END) AS item5,
+        SUM(CASE WHEN ciclo_vital = "18-28 jóvenes" THEN 1 ELSE 0 END) AS item6,
+        SUM(CASE WHEN ciclo_vital = "29-59 adultos" THEN 1 ELSE 0 END) AS item7,
+        SUM(CASE WHEN ciclo_vital = "mayor de 60 adulto mayor" THEN 1 ELSE 0 END) AS item8,
+        SUM(CASE WHEN etnia = "Adulto Mayor" THEN 1 ELSE 0 END) AS item9,
+        SUM(CASE WHEN etnia = "Víctimas del conflicto Armado" THEN 1 ELSE 0 END) AS item10,
+        SUM(CASE WHEN etnia = "Población sexualmente diversa" THEN 1 ELSE 0 END) AS item11,
+        SUM(CASE WHEN etnia = "Niños, Niñas y Adolescentes" THEN 1 ELSE 0 END) AS item12,
+        SUM(CASE WHEN etnia = "Indígenas" THEN 1 ELSE 0 END) AS item13,
+        SUM(CASE WHEN etnia = "Afrodescendiente" THEN 1 ELSE 0 END) AS item14,
+        SUM(CASE WHEN etnia = "Rom" THEN 1 ELSE 0 END) AS item15,
+        SUM(CASE WHEN etnia = "Raizal" THEN 1 ELSE 0 END) AS item16,
+        SUM(CASE WHEN etnia = "Palanquero" THEN 1 ELSE 0 END) AS item17,
+        SUM(CASE WHEN etnia = "Migrantes Venezolanos" THEN 1 ELSE 0 END) AS item18,
+        SUM(CASE WHEN etnia = "Migrantes" THEN 1 ELSE 0 END) AS item19,
+        SUM(CASE WHEN etnia = "Discapacitado" THEN 1 ELSE 0 END) AS item20,
+        SUM(CASE WHEN etnia = "Mujer cabeza de familia" THEN 1 ELSE 0 END) AS item21,
+        SUM(CASE WHEN etnia = "Persona en estado de gestación" THEN 1 ELSE 0 END) AS item22,
+        SUM(CASE WHEN etnia = "Persona con Discapacidad" THEN 1 ELSE 0 END) AS item23,
+        SUM(CASE WHEN etnia = "Colombianos Retornados" THEN 1 ELSE 0 END) AS item24,
+    SUM(CASE WHEN etnia = "Ninguno" THEN 1 ELSE 0 END) AS item25';
 
     // consulta con los datos demográficos 
-    $resultados = Citizen::selectRaw($queryDemograficos)->get();
+    $resultados = Citizen::selectRaw($queryDemograficos);
       
+
+    $query = "";
+    $cadenaFechas ='';
+    $queryOpcional = 'created_at is not NULL';
+    
+    //Verifica si viene filtro y lo agrega a la consulta 
+    if($input["filtros"] != "") { 
+                
+                
+        if (strpos($input["filtros"], '(DATE(created_at) >= ') !== false) {
+        // expresion regular que trae de los filtros la fecha de inicio
+        preg_match('/created_at\) >= (.{12})/', $input["filtros"], $rangeStart);
+        // expresion regular que trae la fecha final
+        preg_match('/created_at\) <= (.{12})/', $input["filtros"],$rangeEnd);
+
+
+        // extrae la fecha de inicio para ponerla en el encabezado.
+        preg_match('/\d{4}-\d{2}-\d{2}/', $rangeStart[0], $matches);
+        // Convertimos la fecha al formato 'dd mes aaaa'
+        $initDate = $matches[0];
+
+        // extrae la fecha de fin para ponerla en el encabezado.
+        preg_match('/\d{4}-\d{2}-\d{2}/', $rangeEnd[0], $matches);
+        // Convertimos la fecha al formato 'dd mes aaaa'
+        $endDate= $matches[0];
+
+
+        $cadenaFechas =  ' DESDE '. $initDate .' HASTA . '.$endDate ;
+        $query = 'DATE('.$rangeStart[0].'AND DATE('. $rangeEnd[0];
+        $queryOpcional = $query;
+        }
+
+        $resultados->whereRaw($query);
+        
+    }
+
+    //Finaliza la consulta con filtro o sin filtro 
+    $resultados = $resultados->get();
+
+    
     // -----inicio de asignación de datos en la hoja 1-------
     $columna = 'D';
     $inicio = 9;
 
-    for ($i = 1; $i <= 26; $i++) {
+    for ($i = 0; $i <= 25; $i++) {
         $itemKey = 'item' . $i;
         $spreadsheet->getActiveSheet()->setCellValue($columna . $inicio, $resultados[0][$itemKey]);
         $inicio++;
     }
-        //------- fin inserción datos en la hoja 4--------  
+
+    $spreadsheet->getActiveSheet()->setCellValue('B2','Datos estadisticos de atenciones prestadas'.
+    $cadenaFechas);
 
         // Se activa de nuevo la primer pagina para que se vea al descargar el reporte.
         $spreadsheet->setActiveSheetIndex(0);
